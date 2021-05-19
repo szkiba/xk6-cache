@@ -1,0 +1,5 @@
+/k6
+.task
+node_modules
+*.k6c
+
