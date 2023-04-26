@@ -1,5 +1,14 @@
-/k6
-.task
-node_modules
-*.k6c
+# SPDX-FileCopyrightText: 2023 Iván Szkiba
+#
+# SPDX-License-Identifier: MIT
 
+bin
+build
+coverage.txt
+k6
+*.eml
+
+# editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

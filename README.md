@@ -8,50 +8,14 @@ Using xk6-cache this is done by pointing `$XK6_CACHE` to some project-local file
 
 ```bash
 # Download the dependencies.
-XK6_CACHE=vendor.k6c k6 run --out cache script.js
+XK6_CACHE=vendor.eml k6 run --out cache script.js
 
 # Make sure the variable is set for any command which invokes the cache.
-XK6_CACHE=vendor.k6c k6 run script.js
+XK6_CACHE=vendor.eml k6 run script.js
 
 # Check the cache file into source control.
-git add -u vendor.k6c
+git add -u vendor.eml
 git commit
-```
-
-Built for [k6](https://go.k6.io/k6) using [xk6](https://github.com/grafana/xk6).
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
-
-- [JavaScript API](#javascript-api)
-- [Create cache file](#create-cache-file)
-- [Use cache file](#use-cache-file)
-- [How it works](#how-it-works)
-- [Build](#build)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## JavaScript API
-
-Usage of xk6-cache extension is transparent for k6 scripts. However sometimes good to see some metrics about cache usage (number of entries, cache hit count, cache miss count). 
-
-You may call [measure()](docs/README.md#measure) function to enable cache metrics.
-
-```JavaScript
-import cache from "k6/x/cache";
-
-export function setup() {
-  cache.measure()
-}
-```
-
-After cache metrics is enabled, the normal k6 metrics output will include the following three metrics:
-
-```
-     xk6_cache_entry_count...: 5
-     xk6_cache_hit_count.....: 3
-     xk6_cache_miss_count....: 0
 ```
 
 ## Create cache file
@@ -59,7 +23,7 @@ After cache metrics is enabled, the normal k6 metrics output will include the fo
 When cache file (pointed by `$XK6_CACHE`) is missing and you run k6 with `--out cache` flag then file will created.
 
 ```plain
-$ XK6_CACHE=vendor.k6c k6 run --out cache script.js
+$ XK6_CACHE=vendor.eml k6 run --out cache script.js
 
           /\      |‾‾| /‾‾/   /‾‾/   
      /\  /  \     |  |/  /   /  /    
@@ -69,7 +33,7 @@ $ XK6_CACHE=vendor.k6c k6 run --out cache script.js
 
   execution: local
      script: script.js
-     output: cache (vendor.k6c)
+     output: cache (vendor.eml)
 ```
 
 If cache file already exists then `--out cache` has no effect, cache file remain untouch. This enable you to use `--out cache` flag always and simly delete cache file when you want to update it.
@@ -79,7 +43,7 @@ If cache file already exists then `--out cache` has no effect, cache file remain
 Simly point `$XK6_CACHE` to existing cache file. Usage of `--out cache` flag has no effect if cache file exists (this is why you see dash instead of output file name).
 
 ```plain
-$ XK6_CACHE=vendor.k6c k6 run --out cache script.js
+$ XK6_CACHE=vendor.eml k6 run --out cache script.js
 
           /\      |‾‾| /‾‾/   /‾‾/   
      /\  /  \     |  |/  /   /  /    
@@ -89,7 +53,7 @@ $ XK6_CACHE=vendor.k6c k6 run --out cache script.js
 
   execution: local
      script: script.js
-     output: cache (-)
+     output: cache (vendor.eml)
 ```
 
 ## How it works
@@ -98,23 +62,61 @@ Well, it's a bit tricky. Since k6 extension API has no lifecycle hooks and the [
 
 It is not a risk for k6 scripts, because `k6/http` module doesn't rely on `http.DefaultTransport`. It would be nice to have an API for extensions to implement custom module loaders.
 
-The cache is a single [FlatBuffers](https://google.github.io/flatbuffers/) file which is store URLs and the downloaded modules only (sorted by URL). This mean the file is almost a text file and source control friendly.
+The cache is a single plain text file which is store URLs and the downloaded modules only (sorted by URL). This mean the file is  a text file and source control friendly. The file format is standard email text format, so if you choose `.eml` as file extension, you can view the content with an email client (like Mozilla Thinderbird).
+
+## Download
+
+You can download pre-built k6 binaries from [Releases](https://github.com/szkiba/xk6-cache/releases/) page. Check [Packages](https://github.com/szkiba/xk6-cache/pkgs/container/xk6-cache) page for pre-built k6 Docker images.
 
 ## Build
 
-To build a `k6` binary with this extension, first ensure you have the prerequisites:
+You can build the k6 binary on various platforms, each with its requirements. The following shows how to build k6 binary with this extension on GNU/Linux distributions.
 
-- [Go toolchain](https://go101.org/article/go-toolchain.html)
-- Git
+### Prerequisites
 
-Then:
+You must have the latest Go version installed to build the k6 binary. The latest version should match [k6](https://github.com/grafana/k6#build-from-source) and [xk6](https://github.com/grafana/xk6#requirements).
+
+- [Git](https://git-scm.com/) for cloning the project
+- [xk6](https://github.com/grafana/xk6) for building k6 binary with extensions
+
+### Install and build the latest tagged version
 
 1. Install `xk6`:
-  ```bash
-  $ go install go.k6.io/xk6/cmd/xk6@latest
-  ```
+
+   ```shell
+   go install go.k6.io/xk6/cmd/xk6@latest
+   ```
 
 2. Build the binary:
-  ```bash
-  $ xk6 build --with github.com/szkiba/xk6-cache@latest
-  ```
+
+   ```shell
+   xk6 build --with github.com/szkiba/xk6-cache@latest
+   ```
+
+> **Note**
+> You can always use the latest version of k6 to build the extension, but the earliest version of k6 that supports extensions via xk6 is v0.43.0. The xk6 is constantly evolving, so some APIs may not be backward compatible.
+
+### Build for development
+
+If you want to add a feature or make a fix, clone the project and build it using the following commands. The xk6 will force the build to use the local clone instead of fetching the latest version from the repository. This process enables you to update the code and test it locally.
+
+```bash
+git clone git@github.com:szkiba/xk6-cache.git && cd xk6-cache
+xk6 build --with github.com/szkiba/xk6-cache@latest=.
+```
+
+## Docker
+
+You can also use pre-built k6 image within a Docker container. In order to do that, you will need to execute something like the following:
+
+**Linux**
+
+```plain
+docker run -v $(pwd):/scripts -e XK6_CACHE=vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
+```
+
+**Windows**
+
+```plain
+docker run -v %cd%:/scripts -e XK6_CACHE=vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
+```
