@@ -64,6 +64,48 @@ It is not a risk for k6 scripts, because `k6/http` module doesn't rely on `http.
 
 The cache is a single plain text file which is store URLs and the downloaded modules only (sorted by URL). This mean the file is  a text file and source control friendly. The file format is standard email text format, so if you choose `.eml` as file extension, you can view the content with an email client (like Mozilla Thinderbird).
 
+<details><summary>Example</summary>
+<p>
+
+For the following script file ...
+
+```js
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+
+export default function () {
+  const randomUUID = uuidv4();
+  console.log(randomUUID);
+}
+```
+
+... will be generated this cache file:
+
+```eml
+Content-Type: multipart/mixed; boundary=______________________________o_o______________________________
+Subject: xk6-cache
+
+--______________________________o_o______________________________
+Content-Type: text/plain; charset=utf-8
+
+This is xk6-cache's standard email format cache file that can be viewed with an email client such as Mozilla Thunderbird. Modules stored as email attachments.
+--______________________________o_o______________________________
+Content-Disposition: attachment; filename="https://jslib.k6.io/k6-utils/1.4.0/index.js"
+Content-Length: 4974
+Content-Location: https://jslib.k6.io/k6-utils/1.4.0/index.js?_k6=1
+Content-Type: text/javascript
+
+(()=>{"use strict";var t={n:r=>{var e=r&&r.__esModule?()=>r.default:()=>r;return .......__esModule&&Object.defineProperty(w,"__esModule",{value:!0})})();
+//# sourceMappingURL=index.js.map
+--______________________________o_o______________________________--
+
+```
+
+> **Note**
+> The long, minified JavaScript code replaced with `.......` in the example above.
+
+</p>
+</details>
+
 ## Download
 
 You can download pre-built k6 binaries from [Releases](https://github.com/szkiba/xk6-cache/releases/) page. Check [Packages](https://github.com/szkiba/xk6-cache/pkgs/container/xk6-cache) page for pre-built k6 Docker images.

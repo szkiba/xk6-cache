@@ -1,8 +1,6 @@
-import { describe } from "https://jslib.k6.io/expect/0.0.4/index.js";
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 export default function () {
-  describe("expect", (t) => {
-    const answer = 42
-    t.expect(answer).as("answer").toEqual(42)
-  })
+  const randomUUID = uuidv4();
+  console.log(randomUUID);
 }
