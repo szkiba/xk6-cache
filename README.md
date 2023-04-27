@@ -78,7 +78,7 @@ export default function () {
 }
 ```
 
-... will be generated this cache file:
+... this cache file will be generated:
 
 ```eml
 Content-Type: multipart/mixed; boundary=______________________________o_o______________________________
