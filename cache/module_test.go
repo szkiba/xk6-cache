@@ -25,6 +25,7 @@ func TestNewModule(t *testing.T) {
 
 	assert.NoError(t, err)
 
+	assert.NoError(t, file.Close())
 	assert.NoError(t, os.Remove(file.Name()))
 
 	module = newModule(file.Name(), transport, logrus.StandardLogger())
