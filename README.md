@@ -1,3 +1,7 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/szkiba/xk6-cache?)](https://goreportcard.com/report/github.com/szkiba/xk6-cache)
+[![GitHub Actions](https://github.com/szkiba/xk6-cache/workflows/Test/badge.svg)](https://github.com/szkiba/xk6-cache/actions?query=workflow%3ATest+branch%3Amaster)
+[![codecov](https://codecov.io/gh/szkiba/xk6-cache/branch/master/graph/badge.svg?token=UESI0KO8J3)](https://codecov.io/gh/szkiba/xk6-cache)
+
 # xk6-cache
 
 A k6 extension enables vendoring [Remote HTTP(s) modules](https://k6.io/docs/using-k6/modules#remote-http-s-modules) to single source control friendly file.
@@ -154,11 +158,11 @@ You can also use pre-built k6 image within a Docker container. In order to do th
 **Linux**
 
 ```plain
-docker run -v $(pwd):/scripts -e XK6_CACHE=vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
+docker run -v $(pwd):/scripts -v /tmp:/tmp -e XK6_CACHE=/tmp/vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
 ```
 
 **Windows**
 
 ```plain
-docker run -v %cd%:/scripts -e XK6_CACHE=vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
+docker run -v %cd%:/scripts -e XK6_CACHE=/scripts/vendor.eml -it --rm ghcr.io/szkiba/xk6-cache:latest run --out=cache /scripts/script.js
 ```
