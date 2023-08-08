@@ -19,6 +19,7 @@ linters:
     - gochecknoglobals
     - lll
     - wrapcheck
+    - depguard
 # deprecated
     - deadcode
     - nosnakecase

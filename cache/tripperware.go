@@ -6,7 +6,7 @@ package cache
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"mime"
 	"net/http"
 	"os"
@@ -101,7 +101,7 @@ func reply2response(req *http.Request, rep *reply) *http.Response {
 		Proto:         "HTTP/1.1",
 		ProtoMajor:    1,
 		ProtoMinor:    1,
-		Body:          ioutil.NopCloser(bytes.NewBuffer(rep.body)),
+		Body:          io.NopCloser(bytes.NewBuffer(rep.body)),
 		ContentLength: int64(len(rep.body)),
 		Request:       req,
 		Header:        cloneHeader(rep.header),

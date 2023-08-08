@@ -2,7 +2,7 @@ package cache
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"testing"
@@ -56,7 +56,7 @@ func TestDuplicateBody(t *testing.T) {
 		Proto:         "HTTP/1.1",
 		ProtoMajor:    1,
 		ProtoMinor:    1,
-		Body:          ioutil.NopCloser(bytes.NewBuffer(body)),
+		Body:          io.NopCloser(bytes.NewBuffer(body)),
 		ContentLength: int64(len(body)),
 		Request:       nil,
 		Header:        http.Header{},

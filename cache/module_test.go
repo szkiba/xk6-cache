@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -21,7 +20,7 @@ func TestNewModule(t *testing.T) {
 	assert.NoError(t, module.Start())
 	assert.NoError(t, module.Stop())
 
-	file, err := ioutil.TempFile("", "")
+	file, err := os.CreateTemp("", "")
 
 	assert.NoError(t, err)
 

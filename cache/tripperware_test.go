@@ -3,7 +3,6 @@ package cache
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -21,7 +20,7 @@ func Test_response2reply(t *testing.T) {
 	hdr := http.Header{"Access-Control-Allow-Origin": []string{"*"}}
 
 	from := &http.Response{ // nolint:exhaustruct
-		Body:          ioutil.NopCloser(bytes.NewBuffer(body)),
+		Body:          io.NopCloser(bytes.NewBuffer(body)),
 		ContentLength: int64(len(body)),
 		Header:        hdr,
 	}
@@ -105,7 +104,7 @@ func TestTripperware_save(t *testing.T) {
 
 	from.history.put(loc, rep)
 
-	file, err := ioutil.TempFile("", "")
+	file, err := os.CreateTemp("", "")
 
 	assert.NoError(t, err)
 
