@@ -30,15 +30,15 @@ jobs:
 
       - name: Lint
         if: ${{ matrix.platform == 'ubuntu-latest' }}
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v3
         with:
-          version: latest
+          version: v1.14.0
           args: lint
 
       - name: Test
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v3
         with:
-          version: latest
+          version: v1.14.0
           args: test
 
       - name: Upload Coverage
